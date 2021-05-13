@@ -1,6 +1,6 @@
 /**
 * @file image_bw.c
-* @brief C program to convert an image to bw
+* @brief C program to generate image histogram 
 * @author Ricardo Menotti
 * @version v1
 * @date 2021-05-12
@@ -18,7 +18,7 @@ int main()
   FILE *fOut = fopen("lena_hist.bmp","w+");     // Output File name
   FILE *fHist = fopen("histogram.bmp","r");    // Temaplate File name
 
-  int i,j,y,x;
+  int i,j,max=0;
   unsigned char byte[54], hist_byte[54];
   unsigned int hist_data[256];
 
@@ -70,19 +70,22 @@ int main()
     r=buffer[i][0];          // red
     gray=(r+(g<<1)+b)>>2;
     hist_data[gray]++;
+    if (hist_data[gray]>max)
+      max=hist_data[gray];
   }
 
   for(i=0;i<256;i++)
   {
+    int bar = (float)hist_data[i]/max*100;
     for(j=0;j<100;j++)
     {
-        out[i*100+j][2] = j < hist_data[i] ? 0 : 255;
-        out[i*100+j][1] = j < hist_data[i] ? 0 : 255;
-        out[i*100+j][0] = j < hist_data[i] ? 0 : 255;
+        out[j*256+i][2] = j < bar ? 0 : 255;
+        out[j*256+i][1] = j < bar ? 0 : 255;
+        out[j*256+i][0] = j < bar ? 0 : 255;
     }
   }
 
-  for(i=0;i<size;i++)            //write image data back to the file
+  for(i=0;i<hist_size;i++)            //write image data back to the file
   {
     putc(out[i][2],fOut);
     putc(out[i][1],fOut);

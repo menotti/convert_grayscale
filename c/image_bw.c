@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <time.h>
 
+#define threshold 95
+
 int main()
 {
   clock_t start, stop;
@@ -59,7 +61,7 @@ int main()
     b=buffer[i][2];          // blue
     g=buffer[i][1];          // green
     r=buffer[i][0];          // red
-    gray=(r+(g<<1)+b)>>2 > 95 ? 255 : 0;
+    gray=(r+(g<<1)+b)>>2 > threshold ? 255 : 0;
     out[i][2]=(unsigned char)gray; 
     out[i][1]=(unsigned char)gray;
     out[i][0]=(unsigned char)gray;
